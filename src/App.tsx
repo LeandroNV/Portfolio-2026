@@ -5,16 +5,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Hero } from "./sections/Hero";
 import { ServiceSummary } from "./sections/ServiceSummary";
 import { Services } from "./sections/Services";
+import ReactLenis from "lenis/react";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
 export const App = () => {
   return (
-    <div className="relative min-h-screen w-screen overflow-x-auto">
+    <ReactLenis root className="relative min-h-screen w-screen overflow-x-auto">
       <NavBar />
       <Hero />
       <ServiceSummary />
       <Services />
-    </div>
+    </ReactLenis>
   );
 };

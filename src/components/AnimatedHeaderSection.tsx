@@ -8,6 +8,7 @@ type AnimatedHeaderSectionProps = {
   title: string;
   text: string;
   textColor: string;
+  withScrollTrigger: boolean;
 };
 
 export const AnimatedHeaderSection = ({
@@ -15,12 +16,19 @@ export const AnimatedHeaderSection = ({
   title,
   text,
   textColor,
+  withScrollTrigger = false,
 }: AnimatedHeaderSectionProps) => {
   const contextRef = useRef(null);
   const headerRef = useRef(null);
 
   useGSAP(() => {
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({
+      scrollTrigger: withScrollTrigger
+        ? {
+            trigger: contextRef.current,
+          }
+        : undefined,
+    });
 
     tl.from(contextRef.current, {
       y: "50vh",

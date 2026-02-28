@@ -19,6 +19,7 @@ export const Hero = () => {
         title="Leandro Vargas"
         text={text}
         textColor="text-black"
+        withScrollTrigger={false}
       />
 
       <figure
