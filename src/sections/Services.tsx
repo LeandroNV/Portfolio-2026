@@ -1,12 +1,33 @@
 import { useRef } from "react";
 import { AnimatedHeaderSection } from "../components/AnimatedHeaderSection";
 import { servicesData } from "../constants";
+import { useMediaQuery } from "react-responsive";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 
 const text =
   "I build secure, high-performance full-stack apps with smoothUX to drive growth not headaches.";
 
 export const Services = () => {
   const servicesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const isDesktop = useMediaQuery({ minWidth: "48rem" }); //768 px
+
+  useGSAP(() => {
+    servicesRef.current.forEach((el) => {
+      if (!el) return;
+
+      gsap.from(el, {
+        y: 200,
+        scrollTrigger: {
+          trigger: el,
+          start: "top 80%",
+        },
+        duration: 1,
+        ease: "circ.out",
+      });
+    });
+  }, []);
+
   return (
     <section id="services" className="min-h-screen rounded-t-4xl bg-black">
       <AnimatedHeaderSection
@@ -22,7 +43,15 @@ export const Services = () => {
             servicesRef.current[index] = el;
           }}
           key={index}
-          className="sticky border-t-2 bg-black px-10 pt-6 pb-10 text-white"
+          className="sticky top-0 border-t-2 bg-black px-10 pt-6 pb-10 text-white"
+          style={
+            isDesktop
+              ? {
+                  top: `calc(10vh + ${index * 5}em)`,
+                  marginBottom: `${(servicesData.length - index - 1) * 5}rem`,
+                }
+              : { top: 0 }
+          }
         >
           <div className="flex items-center justify-between gap-4 font-light">
             <div className="flex flex-col gap-6">
@@ -39,7 +68,9 @@ export const Services = () => {
                       </span>
                       {item.title}
                     </h3>
-                    <div className="my-2 h-px w-full bg-white/30" />
+                    {itemIndex < service.items.length - 1 && (
+                      <div className="my-2 h-px w-full bg-white/30" />
+                    )}
                   </div>
                 ))}
               </div>
