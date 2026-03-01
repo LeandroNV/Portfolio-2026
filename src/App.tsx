@@ -6,6 +6,7 @@ import { Hero } from "./sections/Hero";
 import { ServiceSummary } from "./sections/ServiceSummary";
 import { Services } from "./sections/Services";
 import ReactLenis from "lenis/react";
+import { About } from "./sections/About";
 
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
@@ -16,6 +17,7 @@ export const App = () => {
       <Hero />
       <ServiceSummary />
       <Services />
+      <About />
     </ReactLenis>
   );
 };
