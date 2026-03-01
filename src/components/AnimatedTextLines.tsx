@@ -9,12 +9,12 @@ interface Props {
 
 export const AnimatedTextLines = ({ text, className }: Props) => {
   const lines = text.split("\n").filter((line) => line.trim() !== "");
-  const linesRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const containerRef = useRef(null);
 
   useGSAP(() => {
-    if (linesRefs.current.length > 0) {
-      gsap.from(linesRefs.current, {
+    if (lineRefs.current.length > 0) {
+      gsap.from(lineRefs.current, {
         y: 100,
         opacity: 0,
         duration: 1,
@@ -25,17 +25,17 @@ export const AnimatedTextLines = ({ text, className }: Props) => {
         },
       });
     }
-  }, []);
+  });
 
   return (
     <div ref={containerRef} className={className}>
-      {lines.map((line, i) => (
+      {lines.map((line, index) => (
         <span
+          key={index}
           ref={(el) => {
-            linesRefs.current[i] = el;
+            lineRefs.current[index] = el;
           }}
           className="block leading-relaxed tracking-wide text-pretty"
-          key={i}
         >
           {line}
         </span>

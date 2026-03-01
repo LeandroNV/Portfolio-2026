@@ -190,7 +190,7 @@ export const NavBar = () => {
       </nav>
 
       <div
-        className="fixed top-4 right-10 z-50 flex h-14 w-14 cursor-pointer flex-col items-center justify-center gap-1 rounded-full bg-black transition-all duration-300 md:h-20 md:w-20"
+        className="fixed top-4 right-5 z-50 flex h-14 w-14 cursor-pointer flex-col items-center justify-center gap-1 rounded-full bg-black transition-all duration-300 md:right-10 md:h-20 md:w-20"
         onClick={toggleMenu}
         style={
           showBurger
