@@ -1,12 +1,65 @@
 import { Icon } from "@iconify/react";
 import { AnimatedHeaderSection } from "../components/AnimatedHeaderSection";
 import { projects } from "../constants";
+import { useRef, useState } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const text = `Featured projects that have been meticulously
     crafted with passion to drive
     results and impact.`;
 
 export const Works = () => {
+  const previewRef = useRef(null);
+  const [currenIndex, setCurrenIndex] = useState<number | null>(null);
+
+  const mouse = useRef({ x: 0, y: 0 });
+  const moveX = useRef<gsap.QuickToFunc | null>(null);
+  const moveY = useRef<gsap.QuickToFunc | null>(null);
+
+  useGSAP(() => {
+    moveX.current = gsap.quickTo(previewRef.current, "x", {
+      duration: 1.5,
+      ease: "power3.out",
+    });
+    moveY.current = gsap.quickTo(previewRef.current, "y", {
+      duration: 2,
+      ease: "power3.out",
+    });
+  });
+
+  const handleMouseEnter = (index: number) => {
+    if (window.innerWidth < 768) return;
+    setCurrenIndex(index);
+    gsap.to(previewRef.current, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (window.innerWidth < 768) return;
+    setCurrenIndex(null);
+
+    gsap.to(previewRef.current, {
+      opacity: 0,
+      scale: 0.96,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  };
+
+  const handleMouseMove = (e: { clientX: number; clientY: number }) => {
+    if (window.innerWidth < 768) return;
+    mouse.current.x = e.clientX + 24;
+    mouse.current.y = e.clientY + 24;
+
+    moveX.current?.(mouse.current.x);
+    moveY.current?.(mouse.current.y);
+  };
+
   return (
     <section id="work" className="flex min-h-screen flex-col">
       <AnimatedHeaderSection
@@ -16,12 +69,17 @@ export const Works = () => {
         textColor={"text-black"}
         withScrollTrigger={true}
       />
-      <div className="relative flex flex-col font-light">
-        {projects.map((project) => (
+      <div
+        className="relative flex flex-col font-light"
+        onMouseMove={handleMouseMove}
+      >
+        {projects.map((project, index) => (
           <div
             key={project.id}
             id="project"
             className="group relative flex cursor-pointer flex-col gap-1 py-5 md:gap-0"
+            onMouseEnter={() => handleMouseEnter(index)}
+            onMouseLeave={() => handleMouseLeave()}
           >
             {/* title */}
             <div className="flex justify-between px-10 text-black transition-all duration-500 md:group-hover:px-12 md:group-hover:text-white">
@@ -45,8 +103,36 @@ export const Works = () => {
                 </p>
               ))}
             </div>
+
+            {/* Mobile Preview Images */}
+            <div className="relative flex h-[400px] items-center justify-center px-10 md:hidden">
+              <img
+                src={project.bgImage}
+                alt={`${project.name} -bg-image`}
+                className="h-full w-full rounded-md object-cover brightness-50"
+              />
+              <img
+                src={project.image}
+                alt={`${project.name} - image`}
+                className="absolute rounded-xl bg-center px-14"
+              />
+            </div>
           </div>
         ))}
+
+        {/* desktop floating preview image  */}
+        <div
+          ref={previewRef}
+          className="pointer-events-none fixed -top-2/6 left-0 z-50 hidden w-[960px] overflow-hidden border-8 border-black opacity-0 md:block"
+        >
+          {currenIndex !== null && (
+            <img
+              src={projects[currenIndex].image}
+              alt="preview"
+              className="h-full w-full object-cover"
+            />
+          )}
+        </div>
       </div>
     </section>
   );
